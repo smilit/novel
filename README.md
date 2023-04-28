@@ -293,5 +293,79 @@ button {
 	<script src="script.js"></script>
 </body>
 </html>
+window.addEventListener("load", function() {
+	// 获取画布和上下文
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+
+	// 设置画布的宽度和高度
+	var width = canvas.width = canvas.offsetWidth;
+	var height = canvas.height = canvas.offsetHeight;
+
+	// 定义转盘的中心点坐标、半径和分片数量
+	var centerX = width / 2;
+	var centerY = height / 2;
+	var radius = Math.min(centerX, centerY) * 0.8;
+	var slices = 8;
+
+	// 定义每个分片的颜色和旋转角度
+	var colors = ["#FFC107", "#FF9800", "#FF5722", "#9C27B0", "#673AB7", "#3F51B5", "#2196F3", "#03A9F4"];
+	var sliceDeg = 360 / slices;
+	var startAngle = -sliceDeg / 2;
+	var endAngle = 360 - sliceDeg / 2;
+
+	// 监听开始抽奖按钮的点击事件
+	var btnStart = document.getElementById("btnStart");
+	btnStart.addEventListener("click", function() {
+		// 禁用开始抽奖按钮
+		btnStart.disabled = true;
+
+		// 计算动画的持续时间和结束时间
+		var duration = 5000; // 持续时间为5秒
+		var startTime = new Date().getTime();
+		var endTime = startTime + duration;
+
+		// 定义动画函数
+		function animate() {
+			// 计算当前时间和旋转角度
+			var now = new Date().getTime();
+			var elapsed = now - startTime;
+			var progress = elapsed / duration;
+			var angle = startAngle + (endAngle - startAngle) * progress;
+
+			// 绘制抽奖转盘并旋转
+			ctx.clearRect(0, 0, canvas.width, canvas.height);
+			ctx.save();
+			ctx.translate(centerX, centerY);
+			ctx.rotate(angle * Math.PI / 180);
+			for (var i = 0; i < slices; i++) {
+				ctx.beginPath();
+				ctx.fillStyle = colors[i];
+				ctx.moveTo(0, 0);
+				ctx.arc(0, 0, radius, (sliceDeg * i - 2) * Math.PI / 180, (sliceDeg * i + sliceDeg - 2) * Math.PI / 180);
+				ctx.lineTo(0, 0);
+				ctx.fill();
+			}
+			ctx.restore();
+
+			// 判断动画是否结束
+			if (now < endTime) {
+				// 如果没有结束，则继续执行动画
+				requestAnimationFrame(animate);
+			} else {
+				// 如果结束，则恢复开始抽奖按钮，并显示抽奖结果
+				btnStart.disabled = false;
+				var resultIndex = Math.floor(angle / sliceDeg);
+				var result = "恭喜您获得 " + (resultIndex + 1) + " 等奖！";
+				document.getElementById("result").innerHTML = result;
+			}
+		}
+
+		// 开始执行动画
+		requestAnimationFrame(animate);
+	});
+});
+
+
 
 
