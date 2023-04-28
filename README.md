@@ -200,3 +200,98 @@ novel-plus -- 父工程
 ## 免责声明
 
 本项目提供的爬虫工具仅用于采集项目初期的测试数据，请勿用于商业盈利。 用户使用本系统从事任何违法违规的事情，一切后果由用户自行承担，作者不承担任何责任。
+
+// 获取canvas元素
+var canvas = document.getElementById("canvas");
+
+// 设置画布尺寸
+canvas.width = 300;
+canvas.height = 300;
+
+// 获取绘图上下文
+var ctx = canvas.getContext("2d");
+
+// 设置抽奖转盘的参数
+var colors = ["#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4", "#009688", "#4caf50", "#8bc34a", "#cddc39", "#ffeb3b", "#ffc107", "#ff9800", "#ff5722"];
+var angles = [15, 45, 75, 105, 135, 165, 195, 225, 255, 285, 315, 345];
+var slices = colors.length;
+var sliceDeg = 360 / slices;
+var centerX = canvas.width / 2;
+var centerY = canvas.height / 2;
+var radius = 120;
+
+// 绘制抽奖转盘
+for (var i = 0; i < slices; i++) {
+	ctx.beginPath();
+	ctx.fillStyle = colors[i];
+	ctx.moveTo(centerX, centerY);
+	ctx.arc(centerX, centerY, radius, (sliceDeg * i - 2) * Math.PI / 180, (sliceDeg * i + sliceDeg - 2) * Math.PI / 180);
+	ctx.lineTo(centerX, centerY);
+	ctx.fill();
+}
+
+// 获取开始抽奖按钮元素
+var btnStart = document.getElementById("btn-start");
+
+// 添加点击事件监听器
+btnStart.addEventListener("click", function() {
+	// 随机计算旋转角度
+	var randAngle = Math.floor(Math.random() * 360);
+
+	// 计算旋转时间和旋转速度
+	var duration = 3000;
+	var startTime = new Date().getTime();
+	var endTime = startTime + duration;
+	var startAngle = 0;
+	var endAngle = randAngle + 360 * 5;
+
+	// 开始
+
+body {
+	font-family: Arial, sans-serif;
+	background: #eeeeee;
+}
+
+.container {
+	margin: 50px auto;
+	text-align: center;
+}
+
+canvas {
+	display: block;
+	margin: 0 auto;
+}
+
+button {
+	font-size: 24px;
+	padding: 10px 20px;
+	background: #ffcc00;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	margin-top: 20px;
+}
+
+#result {
+	font-size: 24px;
+	margin-top: 20px;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>冒险岛魔女抽奖系统</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<div class="container">
+		<canvas id="canvas"></canvas>
+		<button id="btn-start">开始抽奖</button>
+		<div id="result"></div>
+	</div>
+
+	<script src="script.js"></script>
+</body>
+</html>
+
+
